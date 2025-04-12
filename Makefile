@@ -1,6 +1,6 @@
 CC = gcc
 
-FILES = main.c ouop.c
+FILES = main.c soup/soup-util.c soup/soup-conv.c soup/soup-eval.c
 
 OUT = -o prog
 

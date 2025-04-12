@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ouop.h"
+#include "soup/soup-conv.h"
+#include "soup/soup-eval.h"
 
 #define EXP_LENGTH 64
 
@@ -20,6 +21,14 @@ int main() {
         }
 
         printf("%s -> %s\n", inf_expr, pof_expr);
+
+        int result;
+        if (OP_PERROR == op_evaluate(pof_expr, pof_at, &result)) {
+                printf("Could not evaluate =(\n");
+                return 0;
+        }
+
+        printf(" = %d\n", result);
 
         return 0;
 }
