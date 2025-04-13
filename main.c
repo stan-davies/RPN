@@ -5,6 +5,8 @@
 #include "soup/soup-conv.h"
 #include "soup/soup-eval.h"
 
+#include "stew/stew-conv.h"
+
 #define EXP_LENGTH 64
 
 int main() {
@@ -29,6 +31,14 @@ int main() {
         }
 
         printf(" = %d\n", result);
+
+
+        char *pof_expr_t = calloc(EXP_LENGTH, sizeof(char));
+        int pof_at_t = 0;
+
+        st_process(inf_expr, &pof_expr_t, inf_at, &pof_at_t);
+
+        printf("\n---\ntree gave: %s\n", pof_expr_t);
 
         return 0;
 }
