@@ -11,7 +11,7 @@
 #define EXP_LENGTH 64
 
 #define EXP_TESTS 4
-#define EXP_TRIAL 100
+#define EXP_TRIAL 1000000
 
 void benchmark() {
         char **exps = calloc(EXP_TESTS, sizeof(char *));
