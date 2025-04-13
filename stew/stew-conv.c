@@ -57,9 +57,9 @@ int st_LSOP(char *exp_chunk, int len) {
         for (int i = 0; i < len; ++i) {
                 c = exp_chunk[i];
                 if (ST_LBRACK == c) {
-                        br_o++;
+                        br_o += 2;
                 } else if (ST_RBRACK == c) {
-                        br_o--;
+                        br_o -= 2;
                 }
 
                 sig = br_o + st_P(c);
