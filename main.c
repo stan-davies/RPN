@@ -10,12 +10,15 @@
 
 #define EXP_LENGTH 64
 
+#define EXP_TESTS 4
+#define EXP_TRIAL 100
+
 void benchmark() {
-        char **exps = calloc(4, sizeof(char *));
-        for (int i = 0; i < 4; ++i) {
+        char **exps = calloc(EXP_TESTS, sizeof(char *));
+        for (int i = 0; i < EXP_TESTS; ++i) {
                 exps[i] = calloc(EXP_LENGTH, sizeof(char));
         }
-        int *lens = calloc(4, sizeof(int));
+        int *lens = calloc(EXP_TESTS, sizeof(int));
 
         lens[0] = 9;
         memcpy(exps[0], "3+(2*4)-5", lens[0] + 1);
@@ -29,43 +32,42 @@ void benchmark() {
         lens[3] = 9;
         memcpy(exps[3], "5+5+5+5+5", lens[2] + 1);
 
-        clock_t begin;
-        clock_t end;
+        clock_t tic;
+        clock_t toc;
         double  duration;
         int suc;
 
-        begin = clock();
-        for (int t = 0; t < 100; ++t) {
-                for (int e = 0; e < 4; ++e) {
+        tic = clock();
+        for (int t = 0; t < EXP_TRIAL; ++t) {
+                for (int e = 0; e < EXP_TESTS; ++e) {
                         char *pof_expr = calloc(EXP_LENGTH, sizeof(char));
                         int pof_at = 0;
                         suc = op_process(exps[e], &pof_expr, lens[e], &pof_at);
+                        /*
                         if (OP_PERROR == suc) {
                                 printf("Something has gone awry!\n");
                         }
-
-                        printf("soup: %s -> %s\n", exps[e], pof_expr);
+                        */
                         free(pof_expr);
                 }
         }
-        end = clock();
-        duration = (end - begin) / CLOCKS_PER_SEC;
-        printf("time spent: %.10fs\n", duration);
+        toc = clock();
+        duration = (double)(toc - tic) / CLOCKS_PER_SEC;
+        printf("time spent: %fs\n", duration);
 
-        begin = clock();
-        for (int t = 0; t < 100; ++t) {
-                for (int e = 0; e < 4; ++e) {
+        tic = clock();
+        for (int t = 0; t < EXP_TRIAL; ++t) {
+                for (int e = 0; e < EXP_TESTS; ++e) {
                         char *pof_expr = calloc(EXP_LENGTH, sizeof(char));
                         int pof_at = 0;
                         st_process(exps[e], &pof_expr, lens[e], &pof_at);
-                        printf("soup: %s -> %s\n", exps[e], pof_expr);
                         free(pof_expr);
 
                 }
         }
-        end = clock();
-        duration = (end - begin) / CLOCKS_PER_SEC;
-        printf("time spent: %.10fs\n", duration);
+        toc = clock();
+        duration = (double)(toc - tic) / CLOCKS_PER_SEC;
+        printf("time spent: %fs\n", duration);
 }
 
 
