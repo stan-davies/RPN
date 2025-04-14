@@ -1,11 +1,14 @@
 #include "stew-conv.h"
 
 void st_process(char *in, char **out, int in_at, int *out_at) {
-        struct st_node *root = st_maken(in, in_at);
+        char *ou = calloc(ST_EXPR_SIZE, sizeof(char));
+        int ou_at = 0;
+        struct st_node *root = st_maken(in, in_at, &ou, &ou_at);
+        printf("internal %s -> %s\n", in, ou);
         st_porder(*root, out, out_at);
 }
 
-struct st_node *st_maken(char *exp, int exp_len) {
+struct st_node *st_maken(char *exp, int exp_len, char **out, int *out_at) {
         char *left = calloc(ST_CHUNK_SIZE, sizeof(char));
         char *rght = calloc(ST_CHUNK_SIZE, sizeof(char));
         struct st_node *this = calloc(1, sizeof(struct st_node));
@@ -20,12 +23,16 @@ struct st_node *st_maken(char *exp, int exp_len) {
                                 continue;
                         }
                         this->chr = exp[i];
+                        (*out)[*out_at] = this->chr;
+                        (*out_at)++;
                         break;
                 }
                 goto finef_lr;
         }
 
         this->chr = exp[lsoi];
+        (*out)[*out_at] = this->chr;
+        (*out_at)++;
 
         for (int i = 0; i < exp_len; ++i) {
                 if (i < lsoi) {
@@ -36,8 +43,8 @@ struct st_node *st_maken(char *exp, int exp_len) {
                 }
         }
 
-        this->left = st_maken(left, lsoi);
-        this->rght = st_maken(rght, exp_len - (lsoi + 1));
+        this->left = st_maken(left, lsoi, out, out_at);
+        this->rght = st_maken(rght, exp_len - (lsoi + 1), out, out_at);
 
 finef_lr:
         free(left);
