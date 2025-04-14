@@ -31,8 +31,6 @@ struct st_node *st_maken(char *exp, int exp_len, char **out, int *out_at) {
         }
 
         this->chr = exp[lsoi];
-        (*out)[*out_at] = this->chr;
-        (*out_at)++;
 
         for (int i = 0; i < exp_len; ++i) {
                 if (i < lsoi) {
@@ -45,6 +43,9 @@ struct st_node *st_maken(char *exp, int exp_len, char **out, int *out_at) {
 
         this->left = st_maken(left, lsoi, out, out_at);
         this->rght = st_maken(rght, exp_len - (lsoi + 1), out, out_at);
+
+        (*out)[*out_at] = this->chr;
+        (*out_at)++;
 
 finef_lr:
         free(left);
