@@ -56,12 +56,12 @@ C-soup    | 400    | 0.000
 C-stew    | 400    | 0.001
 C#        | 400    | 0.005
 C-stew2   | 400    | 0.000
-
+          |        |
 C-soup    | 4mil.  | 0.601
 C-stew    | 4mil.  | 2.440
 C#        | 4mil.  | 6.005
 C-stew2   | 4mil.  | 0.753
-
+          |        |
 C-soup    | 20mil. | 2.842
 C-stew    | 20mil. | 13.065
 C#        | 20mil. | 27.164
