@@ -4,11 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "util/util.h"
+
 #define ST_CHUNK_SIZE     32
 #define ST_EXPR_SIZE      64
-#define ST_TRUE           1
-#define ST_FALSE          0
-#define ST_NULL           (void *)0
 
 #define ST_PLUS           43
 #define ST_MINUS          45 
@@ -21,21 +20,10 @@
 #define ST_PMAJOR         2
 #define ST_PUNKNOWN       -1
 
-struct st_node {
-        int             leaf;
-        char            chr;
-        struct st_node *left;
-        struct st_node *rght;
-};
+int st_process(char *exp, int exp_s, int exp_e, char **out, int *out_at);
 
-void st_process(char *in, char **out, int in_at, int *out_at);
-
-struct st_node *st_maken(char *exp, int exp_len, char **out, int *out_at);
-
-int st_LSOP(char *exp_chunk, int len);
+int st_LSOP(char *exp, int exp_s, int exp_e);
 
 int st_P(char oper);
-
-void st_porder(struct st_node n, char **out, int *out_at);
 
 #endif

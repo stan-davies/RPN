@@ -11,7 +11,7 @@
 #define EXP_LENGTH 64
 
 #define EXP_TESTS 4
-#define EXP_TRIAL 1
+#define EXP_TRIAL 5000000
 
 void benchmark() {
         char **exps = calloc(EXP_TESTS, sizeof(char *));
@@ -43,11 +43,10 @@ void benchmark() {
                         char *pof_expr = calloc(EXP_LENGTH, sizeof(char));
                         int pof_at = 0;
                         suc = op_process(exps[e], &pof_expr, lens[e], &pof_at);
-                        /*
-                        if (OP_PERROR == suc) {
+                        if (NU_PERROR == suc) {
                                 printf("Something has gone awry!\n");
                         }
-                        */
+//                        printf("soup: %s -> %s\n", exps[e], pof_expr);
                         free(pof_expr);
                 }
         }
@@ -60,9 +59,9 @@ void benchmark() {
                 for (int e = 0; e < EXP_TESTS; ++e) {
                         char *pof_expr = calloc(EXP_LENGTH, sizeof(char));
                         int pof_at = 0;
-                        st_process(exps[e], &pof_expr, lens[e], &pof_at);
+                        suc = st_process(exps[e], 0, lens[e] - 1, &pof_expr, &pof_at);
+//                        printf("stew: %s -> %s\n", exps[e], pof_expr);
                         free(pof_expr);
-
                 }
         }
         toc = clock();

@@ -1,69 +1,38 @@
 #include "stew-conv.h"
 
-void st_process(char *in, char **out, int in_at, int *out_at) {
-        char *ou = calloc(ST_EXPR_SIZE, sizeof(char));
-        int ou_at = 0;
-        struct st_node *root = st_maken(in, in_at, &ou, &ou_at);
-        printf("internal %s -> %s\n", in, ou);
-        st_porder(*root, out, out_at);
-}
-
-struct st_node *st_maken(char *exp, int exp_len, char **out, int *out_at) {
-        char *left = calloc(ST_CHUNK_SIZE, sizeof(char));
-        char *rght = calloc(ST_CHUNK_SIZE, sizeof(char));
-        struct st_node *this = calloc(1, sizeof(struct st_node));
-        this->leaf = ST_FALSE;
-
-        int lsoi = st_LSOP(exp, exp_len);
+int st_process(char *exp, int exp_s, int exp_e, char **out, int *out_at) {
+        int lsoi = st_LSOP(exp, exp_s, exp_e);
 
         if (ST_PUNKNOWN == lsoi) {
-                this->leaf = ST_TRUE;
-                for (int i = 0; i < exp_len; ++i) {
+                for (int i = exp_s; i <= exp_e; ++i) {
                         if (ST_LBRACK == exp[i] || ST_RBRACK == exp[i]) {
                                 continue;
                         }
-                        this->chr = exp[i];
-                        (*out)[*out_at] = this->chr;
-                        (*out_at)++;
-                        break;
+                        if (NU_PERROR == nu_pushc(out, out_at, exp[i])) {
+                                return NU_PERROR;
+                        }
                 }
-                goto finef_lr;
+                return NU_PFINE;
         }
 
-        this->chr = exp[lsoi];
+        st_process(exp, exp_s, lsoi - 1, out, out_at);
+        st_process(exp, lsoi + 1, exp_e, out, out_at);
 
-        for (int i = 0; i < exp_len; ++i) {
-                if (i < lsoi) {
-                        left[i] = exp[i];
-                }
-                if (i > lsoi) {
-                        rght[i - (lsoi + 1)] = exp[i];
-                }
+        if (NU_PERROR == nu_pushc(out, out_at, exp[lsoi])) {
+                return NU_PERROR;
         }
-
-        this->left = st_maken(left, lsoi, out, out_at);
-        this->rght = st_maken(rght, exp_len - (lsoi + 1), out, out_at);
-
-        (*out)[*out_at] = this->chr;
-        (*out_at)++;
-
-finef_lr:
-        free(left);
-        left = ST_NULL;
-        free(rght);
-        rght = ST_NULL;
-        return this;
+        return NU_PFINE;
 }
 
-int st_LSOP(char *exp_chunk, int len) {
+int st_LSOP(char *exp, int exp_s, int exp_e) {
         int  br_o  = 0;
         int  lsopi = ST_PUNKNOWN;
         int  l_sig = 10;
         int  sig;
         int  p;
         char c;
-        for (int i = 0; i < len; ++i) {
-                c = exp_chunk[i];
+        for (int i = exp_s; i <= exp_e; ++i) {
+                c = exp[i];
                 if (ST_LBRACK == c) {
                         br_o += 2;
                 } else if (ST_RBRACK == c) {
@@ -95,18 +64,4 @@ int st_P(char oper) {
         default:
                 return ST_PUNKNOWN;
         }
-}
-
-void st_porder(struct st_node n, char **out, int *out_at) {
-        if (n.leaf) {
-                (*out)[*out_at] = n.chr;
-                (*out_at)++;
-                return;
-        }
-
-        st_porder(*(n.left), out, out_at);
-        st_porder(*(n.rght), out, out_at);
-
-        (*out)[*out_at] = n.chr;
-        (*out_at)++;
 }

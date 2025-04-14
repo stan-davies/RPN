@@ -4,59 +4,59 @@ int op_evaluate(char *exp, int exp_at, int *result) {
         char curc;
         int  prec;
         int  curi;
-        int *nums = calloc(OP_STACK_SIZE, sizeof(char));
+        int *nums = calloc(NU_STACK_SIZE, sizeof(char));
         int  nums_at = 0;
         for (int i = 0; i < exp_at; ++i) {
                 curc = exp[i];
                 prec = op_P(curc);
-                if (OP_PERROR != prec) {
-                        if (OP_PERROR == op_condense(&nums, &nums_at, curc)) {
+                if (NU_PERROR != prec) {
+                        if (NU_PERROR == op_condense(&nums, &nums_at, curc)) {
                                 goto errf_nums;
                         }
                         continue;
                 }
 
-                if (OP_PERROR == op_converti(curc, &curi)) {
+                if (NU_PERROR == op_converti(curc, &curi)) {
                         goto errf_nums;
                 }
 
-                if (OP_PERROR == op_pushi(&nums, &nums_at, curi)) {
+                if (NU_PERROR == nu_pushi(&nums, &nums_at, curi)) {
                         goto errf_nums;
                 }
         }
 
-        if (OP_PERROR == op_popi(nums, &nums_at, result)) {
+        if (NU_PERROR == nu_popi(nums, &nums_at, result)) {
                 goto errf_nums;
         }
 
 fine:
         free(nums);
-        nums = OP_NULL;
-        return OP_PFINE;
+        nums = NU_NULL;
+        return NU_PFINE;
 
 errf_nums:
         free(nums);
-        nums = OP_NULL;
-        return OP_PERROR;
+        nums = NU_NULL;
+        return NU_PERROR;
 }
 
 int op_condense(int **nums, int *nums_at, char oper) {
         int a;
         int b;
         int r;
-        if (OP_PERROR == op_popi(*nums, nums_at, &a)) {
-                return OP_PERROR;
+        if (NU_PERROR == nu_popi(*nums, nums_at, &a)) {
+                return NU_PERROR;
         }
-        if (OP_PERROR == op_popi(*nums, nums_at, &b)) {
-                return OP_PERROR;
+        if (NU_PERROR == nu_popi(*nums, nums_at, &b)) {
+                return NU_PERROR;
         }
-        if (OP_PERROR == op_operate(b, oper, a, &r)) {
-                return OP_PERROR;
+        if (NU_PERROR == op_operate(b, oper, a, &r)) {
+                return NU_PERROR;
         }
-        if (OP_PERROR == op_pushi(nums, nums_at, r)) {
-                return OP_PERROR;
+        if (NU_PERROR == nu_pushi(nums, nums_at, r)) {
+                return NU_PERROR;
         }
-        return OP_PFINE;
+        return NU_PFINE;
 }
 
 int op_operate(int a, char oper, int b, int *res) {
@@ -74,19 +74,19 @@ int op_operate(int a, char oper, int b, int *res) {
                 *res = a / b;
                 break;
         default:
-                return OP_PERROR;
+                return NU_PERROR;
         }
 
-        return OP_PFINE;
+        return NU_PFINE;
 }
 
 int op_converti(char numc, int *numi) {
         if (numc < OP_ZERO || numc > OP_NINE) {
-                return OP_PERROR;
+                return NU_PERROR;
         }
 
         *numi = numc - OP_ZERO;
-        return OP_PFINE;
+        return NU_PFINE;
 }
 
 

@@ -1,6 +1,7 @@
 #ifndef SOUP_EVAL_H
 #define SOUP_EVAL_H
 
+#include "util/util.h"
 #include "soup-util.h"
 
 int op_evaluate(char *exp, int exp_at, int *result);

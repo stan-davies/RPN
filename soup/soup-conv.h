@@ -1,6 +1,7 @@
 #ifndef OUOP_H
 #define OUOP_H
 
+#include "util/util.h"
 #include "soup-util.h"
 
 /*
