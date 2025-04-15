@@ -11,9 +11,9 @@
 #define EXP_LENGTH 64
 
 #define EXP_TESTS 4
-#define EXP_TRIAL 5000000
+#define EXP_TRIAL 1000000
 
-void benchmark() {
+double benchmark() {
         char **exps = calloc(EXP_TESTS, sizeof(char *));
         for (int i = 0; i < EXP_TESTS; ++i) {
                 exps[i] = calloc(EXP_LENGTH, sizeof(char));
@@ -34,7 +34,8 @@ void benchmark() {
 
         clock_t tic;
         clock_t toc;
-        double  duration;
+        double  op_dur;
+        double  st_dur;
         int suc;
 
         tic = clock();
@@ -51,8 +52,8 @@ void benchmark() {
                 }
         }
         toc = clock();
-        duration = (double)(toc - tic) / CLOCKS_PER_SEC;
-        printf("time spent: %fs\n", duration);
+        op_dur = (double)(toc - tic) / CLOCKS_PER_SEC;
+        printf("soup time spent: %fs\n", op_dur);
 
         tic = clock();
         for (int t = 0; t < EXP_TRIAL; ++t) {
@@ -60,19 +61,36 @@ void benchmark() {
                         char *pof_expr = calloc(EXP_LENGTH, sizeof(char));
                         int pof_at = 0;
                         suc = st_process(exps[e], 0, lens[e] - 1, &pof_expr, &pof_at);
+                        if (NU_PERROR == suc) {
+                                printf("Something has gone awry!\n");
+                        }
 //                        printf("stew: %s -> %s\n", exps[e], pof_expr);
                         free(pof_expr);
                 }
         }
         toc = clock();
-        duration = (double)(toc - tic) / CLOCKS_PER_SEC;
-        printf("time spent: %fs\n", duration);
+        st_dur = (double)(toc - tic) / CLOCKS_PER_SEC;
+        printf("stew time spent: %fs\n", st_dur);
+        return op_dur - st_dur;
 }
 
 
 int main() {
-        benchmark();
+        double diff = 0.0;
+        for (int i = 0; i < 4; ++i) {
+                diff += benchmark();
+        }
+        diff /= 4.0;
+        if (diff < 0.0) {
+                printf("soup");
+                diff *= -1.0;
+        } else if (diff > 0.0){
+                printf("stew");
+        } else {
+                printf("neither really");
+        }
 
+        printf(" ran faster. Difference of ~ %.10fs\n", diff);
 
         /*
         clock_t begin;

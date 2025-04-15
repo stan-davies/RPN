@@ -29,20 +29,23 @@ int st_LSOP(char *exp, int exp_s, int exp_e) {
         int  lsopi = ST_PUNKNOWN;
         int  l_sig = 10;
         int  sig;
-        int  p;
         char c;
-        for (int i = exp_s; i <= exp_e; ++i) {
+        for (int i = exp_e; i >= exp_s; --i) {
                 c = exp[i];
                 if (ST_LBRACK == c) {
-                        br_o += 2;
-                } else if (ST_RBRACK == c) {
                         br_o -= 2;
+                        continue;
+                } else if (ST_RBRACK == c) {
+                        br_o += 2;
+                        continue;
                 }
 
                 sig = br_o + st_P(c);
 
                 if (sig < br_o) {
                         continue;
+                } else if (1 == sig) {
+                        return i;
                 } else if (sig <= l_sig) {
                         lsopi = i;
                         l_sig = sig;
