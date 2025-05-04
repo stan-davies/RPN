@@ -42,9 +42,10 @@ int st_LSOP(char *exp, int exp_s, int exp_e) {
 
                 sig = br_o + st_P(c);
 
-                if (sig < br_o) {
-                        continue;
-                } else if (1 == sig) {
+//                if (sig < br_o) {
+//                        continue;
+//                } else 
+                if (1 == sig) {
                         return i;
                 } else if (sig <= l_sig) {
                         lsopi = i;

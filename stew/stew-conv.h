@@ -18,7 +18,7 @@
 
 #define ST_PMINOR         1
 #define ST_PMAJOR         2
-#define ST_PUNKNOWN       -1
+#define ST_PUNKNOWN       100
 
 int st_process(char *exp, int exp_s, int exp_e, char **out, int *out_at);
 
