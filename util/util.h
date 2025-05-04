@@ -7,7 +7,7 @@
 #define NU_PERROR        0
 #define NU_PFINE         1
 #define NU_NULL          (void *)0
-#define NU_STACK_SIZE    32
+#define NU_STACK_SIZE    64
 
 /*
  *   move stacks 

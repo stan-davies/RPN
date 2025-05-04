@@ -6,8 +6,8 @@
 
 #include "util/util.h"
 
-#define ST_CHUNK_SIZE     32
-#define ST_EXPR_SIZE      64
+#define ST_CHUNK_SIZE     64
+#define ST_EXPR_SIZE      128
 
 #define ST_PLUS           43
 #define ST_MINUS          45 

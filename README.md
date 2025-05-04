@@ -33,6 +33,11 @@ the input string for each of the children was unecessary, and so instead just
 passed on the indices of the start and end of a string slice to child
 recursions. This has also proven to be much more efficient.
 
+## `stew2.1` : String to Tree of Expressions Wow! 2.1
+
+This version changes `st_LSOP()` by making it start it's search from the right.
+I am uncertain if this has had much of, if any, impact on performance.
+
 ---
 
 ## Comparison

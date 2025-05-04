@@ -11,7 +11,58 @@
 #define EXP_LENGTH 64
 
 #define EXP_TESTS 4
-#define EXP_TRIAL 1000000
+#define EXP_TRIAL 50
+
+double benchmark2() {
+        char *exp1 = calloc(EXP_LENGTH, sizeof(char));
+        int   exp1_at = 23;
+        memcpy(exp1, "3+(2+4)+(2*4+(3-1)*6)-5", exp1_at);
+
+        char *exp2 = calloc(EXP_LENGTH, sizeof(char));
+        int   exp2_at = 3;
+        memcpy(exp2, "1+1", exp2_at);
+
+        clock_t tic;
+        clock_t toc;
+        double  soup_dur;
+        double  stew_dur;
+        int     suc;
+
+
+        char *pof = calloc(EXP_LENGTH, sizeof(char));
+        int   pof_at;
+
+        tic = clock();
+        for (int i = 0; i < EXP_TRIAL; ++i) {
+                pof_at = 0;
+                suc = op_process(exp1, &pof, exp1_at, &pof_at);
+                if (NU_PERROR == suc) {
+                        printf("Something has gone awry!\n");
+                }
+//                printf("soup: %s -> %s\n", exp2, pof);
+        }
+        toc = clock();
+        
+        soup_dur = (double)(toc - tic) / CLOCKS_PER_SEC;
+        printf("soup: %.10fs\n", soup_dur);
+        
+        tic = clock();
+        for (int i = 0; i < EXP_TRIAL; ++i) {
+                pof_at = 0;
+                suc = st_process(exp1, 0, exp1_at - 1, &pof, &pof_at);
+                if (NU_PERROR == suc) {
+                        printf("Something has gone awry!\n");
+                }
+//                printf("stew: %s -> %s\n", exp2, pof);
+        }
+        toc = clock();
+
+        stew_dur = (double)(toc - tic) / CLOCKS_PER_SEC;
+        printf("stew: %.10fs\n", stew_dur);
+
+        free(pof);
+        return soup_dur - stew_dur;
+}
 
 double benchmark() {
         char **exps = calloc(EXP_TESTS, sizeof(char *));
@@ -53,7 +104,7 @@ double benchmark() {
         }
         toc = clock();
         op_dur = (double)(toc - tic) / CLOCKS_PER_SEC;
-        printf("soup time spent: %fs\n", op_dur);
+//        printf("soup time spent: %fs\n", op_dur);
 
         tic = clock();
         for (int t = 0; t < EXP_TRIAL; ++t) {
@@ -70,7 +121,7 @@ double benchmark() {
         }
         toc = clock();
         st_dur = (double)(toc - tic) / CLOCKS_PER_SEC;
-        printf("stew time spent: %fs\n", st_dur);
+//        printf("stew time spent: %fs\n", st_dur);
         return op_dur - st_dur;
 }
 
@@ -78,7 +129,7 @@ double benchmark() {
 int main() {
         double diff = 0.0;
         for (int i = 0; i < 4; ++i) {
-                diff += benchmark();
+                diff += benchmark2();
         }
         diff /= 4.0;
         if (diff < 0.0) {

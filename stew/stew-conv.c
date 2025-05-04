@@ -57,11 +57,9 @@ int st_LSOP(char *exp, int exp_s, int exp_e) {
 int st_P(char oper) {
         switch (oper) {
         case ST_PLUS:
-                return ST_PMINOR;
         case ST_MINUS:
                 return ST_PMINOR;
         case ST_TIMES:
-                return ST_PMAJOR;
         case ST_DIVIDE:
                 return ST_PMAJOR;
         default:
